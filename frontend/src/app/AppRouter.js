@@ -1,31 +1,40 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from '../pages/HomePage';
-import AdminPage from '../pages/AdminPage';
-import LoginPage from '../pages/LoginPage';
-import ProtectedRoute from '../utils/ProtectedRoute';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProductsPage from "../pages/ProductsPage";
+import AdminPage from "../pages/AdminPage";
+import LoginPage from "../pages/LoginPage";
+import ProtectedRoute from "../utils/ProtectedRoute";
+import NewProductPage from "../pages/NewProductPage";
+import MovementsPage from "../pages/MovementsPage";
+import NewProductMovementForm from "../features/ProductsMovements/NewProductMovement/NewProductMovementForm";
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <HomePage />,
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      {
+        path: "",
+        element: <ProductsPage />,
+      },
+      {
+        path: "new",
+        element: <NewProductPage />,
+      },
+      {
+        path: "movements",
+        element: <MovementsPage />,
+      },
+    ],
   },
   {
-    path: '/admin',
-    element: (
-      <ProtectedRoute>
-        <AdminPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/login',
+    path: "/login",
     element: <LoginPage />,
   },
 ]);
 
-const AppRouter = () => {
-  return <RouterProvider router={router} />;
+const AppRouter = ({ children }) => {
+  return <RouterProvider router={router}>{children}</RouterProvider>;
 };
 
 export default AppRouter;
