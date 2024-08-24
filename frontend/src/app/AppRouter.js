@@ -6,7 +6,7 @@ import LoginPage from "../pages/LoginPage";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import NewProductPage from "../pages/NewProductPage";
 import MovementsPage from "../pages/MovementsPage";
-import NewProductMovementForm from "../features/ProductsMovements/NewProductMovement/NewProductMovementForm";
+import LogisticsDispatchPage from "../pages/LogisticsDispatchPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +25,10 @@ const router = createBrowserRouter([
         path: "movements",
         element: <MovementsPage />,
       },
+      {
+        path: "logistics", 
+        element: <LogisticsDispatchPage />,
+      }
     ],
   },
   {

@@ -62,7 +62,7 @@ function ProductsPage() {
   return (
     <div className="space-y-2 p-2">
       <div className="flex justify-between items-center px-2">
-      <div className="flex items-center">
+        <div className="flex items-center">
           <GrList className="inline mr-2 text-xl" />{" "}
           <h2 className="m-0 text-xl font-bold inline">Listado de Productos</h2>
         </div>

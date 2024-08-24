@@ -4,6 +4,7 @@ const options = [
   { label: "Nuevo Medicamento", path: "/admin/new" },
   { label: "Medicamentos", path: "/admin" },
   { label: "Movimientos", path: "/admin/movements" },
+  { label: "Logistica Salida", path: "/admin/logistics" },
 ];
 const Header = () => {
   return (
