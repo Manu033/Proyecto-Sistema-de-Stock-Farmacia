@@ -8,6 +8,7 @@ require("dotenv").config();
 const verifyToken = require("./src/middlewares/authMiddleware");
 // Conexion a la base de datos
 const sequelize = require("./src/utils/sequelizeDbConnection");
+const db = require("./models");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +29,8 @@ app.get("/protected", verifyToken, (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+db.sequelize.sync({ force: true }).then(() => {
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
 });
