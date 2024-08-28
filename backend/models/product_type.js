@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
   {
     sequelize,
     modelName: 'Product_type',
-    primaryKey: 'cod_product_type',
   });
 
 
