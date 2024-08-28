@@ -8,6 +8,7 @@ import NewProductPage from "../pages/NewProductPage";
 import MovementsPage from "../pages/MovementsPage";
 import LogisticsDispatchPage from "../pages/LogisticsDispatchPage";
 
+
 const router = createBrowserRouter([
   {
     path: "/admin",
