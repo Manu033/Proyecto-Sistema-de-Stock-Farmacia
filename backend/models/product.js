@@ -10,19 +10,62 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Definir la asociación aquí
-      Product.belongsTo(models.Category, {
-        foreignKey: 'categoryId',
-        as: 'category'
+
+      //Relacion con Laboratory
+      Product.belongsTo(models.Laboratory, {
+        foreignKey: 'cod_laboratory',
+        as: 'laboratory',
       });
-    }
+
+      //Relacion con Product_type
+      Product.belongsTo(models.Product_type, {
+        foreignKey: 'cod_product_type',
+        as: 'product_type',
+      });
+
+      // Relación con Batch
+      Product.hasMany(models.Batch, {
+        foreignKey: 'cod_product',
+        as: 'batches',
+      });
+    }      
   }
 
   Product.init({
-    name: DataTypes.STRING,
-    categoryId: DataTypes.INTEGER // Asegúrate de que el campo sea categoryId
-  }, {
+    cod_product: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+    //autoIncrement: true
+    },
+    cod_laboratory: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      references: {
+        model: 'Laboratory', // Nombre de la tabla en la base de datos
+        key: 'cod_laboratory'
+      }
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+  },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+  },
+  cod_product_type: {
+    type: DataTypes.TINYINT,
+    allowNull: false,
+    references: {
+      model: 'Product_type',
+      key: 'cod_product_type'
+    }
+  },
+},
+  {
     sequelize,
     modelName: 'Product',
+    primaryKey: ['cod_product', 'cod_laboratory'],
   });
 
   return Product;
