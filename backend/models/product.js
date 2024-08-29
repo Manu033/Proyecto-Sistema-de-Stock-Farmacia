@@ -12,15 +12,34 @@ module.exports = (sequelize, DataTypes) => {
       // Definir la asociación aquí
       Product.belongsTo(models.Laboratory, {
         foreignKey: 'laboratoryId',
-        as: 'laboratory'
+        as: 'laboratory',
       });
+
+      Product.belongsTo(models.ProductType, {
+        foreignKey: 'productTypeId',
+        as: 'productType',
+      });
+
     }
   }
 
   Product.init({
+    productId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     name: DataTypes.STRING,
     description: DataTypes.STRING,
-    laboratoryId: DataTypes.INTEGER // Asegúrate de que el campo sea categoryId
+    laboratoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    productTypeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Product',
