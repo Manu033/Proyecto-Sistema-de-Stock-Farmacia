@@ -3,21 +3,36 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../features/auth/authSlice';
+import { loginService } from './../api/auth/authServices';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = { username: 'user', password: 'password' }; // Simulación de datos de inicio de sesión
+    const email = e.target.username.value;
+    const password = e.target.password.value;
 
-    // Aquí podrías realizar una llamada a la API para verificar el usuario
+    try {
+      const data = await loginService(email, password);
 
-    // Suponiendo que la autenticación es exitosa
-    dispatch(login(user));
-    navigate('/admin');
+      // Suponiendo que el token está en data.token
+      const token = data.token;
+
+      // Almacenar el token en localStorage
+      localStorage.setItem('token', token);
+
+      // Actualizar el estado de autenticación en Redux
+      dispatch(login({ user: data.user, token }));
+
+      // Navegar al dashboard de admin
+      navigate('/admin');
+    } catch (error) {
+      console.error('Error during login:', error);
+      // Manejar el error aquí, mostrar un mensaje al usuario, etc.
+    }
   };
 
   React.useEffect(() => {

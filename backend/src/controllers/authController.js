@@ -76,4 +76,17 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const verifyToken = async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      res.status(200).json({
+        message: "Token válido",
+        authData,
+      });
+    }
+  });
+};
+
+module.exports = { registerUser, loginUser, verifyToken };

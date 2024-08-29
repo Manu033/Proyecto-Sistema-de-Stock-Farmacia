@@ -10,6 +10,13 @@ const verifyToken = require("./src/middlewares/authMiddleware");
 const sequelize = require("./src/utils/sequelizeDbConnection");
 const db = require("./models");
 
+// use cors
+corsOptions = {
+  origin: "http://localhost:3001",
+};
+const cors = require("cors");
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -29,7 +36,7 @@ app.get("/protected", verifyToken, (req, res) => {
 });
 
 // Iniciar servidor
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });

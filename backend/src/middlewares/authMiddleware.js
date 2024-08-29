@@ -19,7 +19,7 @@ const authMiddleware = (req, res, next) => {
     // Continuar con la siguiente función del middleware
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Token inválido o expirado.", error });
+    return res.status(401).json({ message: "Token inválido o expirado.", error }).redirect("/login");
   }
 };
 
