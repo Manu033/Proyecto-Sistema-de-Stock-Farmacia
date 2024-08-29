@@ -10,16 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Definir la asociación aquí
-      Product.belongsTo(models.Category, {
-        foreignKey: 'categoryId',
-        as: 'category'
+      Product.belongsTo(models.Laboratory, {
+        foreignKey: 'laboratoryId',
+        as: 'laboratory'
       });
     }
   }
 
   Product.init({
     name: DataTypes.STRING,
-    categoryId: DataTypes.INTEGER // Asegúrate de que el campo sea categoryId
+    description: DataTypes.STRING,
+    laboratoryId: DataTypes.INTEGER // Asegúrate de que el campo sea categoryId
   }, {
     sequelize,
     modelName: 'Product',
