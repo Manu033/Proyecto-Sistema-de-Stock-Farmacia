@@ -9,33 +9,33 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // Definir la asociación aquí
-      Product.belongsTo(models.Laboratory, {
-        foreignKey: 'laboratoryId',
-        as: 'laboratory',
-      });
 
+      // Asociación con ProductType
       Product.belongsTo(models.ProductType, {
         foreignKey: 'productTypeId',
         as: 'productType',
+      });
+
+      Product.hasMany(models.Lot, {
+        foreignKey: 'productId',
+        as: 'lots',
       });
 
     }
   }
 
   Product.init({
-    productId: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    laboratoryId: {
-      type: DataTypes.INTEGER,
+    // productId: {
+    //   type: DataTypes.INTEGER,
+    //   primaryKey: true,
+    //   autoIncrement: true,
+    // },
+    name: {
+      type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
-      primaryKey: true,
     },
+    description: DataTypes.STRING,
     productTypeId: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Definir la asociación aquí
-      Laboratory.hasMany(models.Product, {
+      Laboratory.hasMany(models.Lot, {
         foreignKey: 'laboratoryId',
-        as: 'products'
+        as: 'lots'
       });
     }
   }
