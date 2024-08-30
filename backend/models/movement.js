@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
             as: 'movementType'
         });
 
+        Movement.hasMany(models.MovementDetail, {
+          foreignKey: 'movementId',
+          as: 'movementDetails'
+        });
     }
   }
 

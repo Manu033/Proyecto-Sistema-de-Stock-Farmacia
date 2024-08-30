@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'laboratoryId',
         as: 'laboratory',
       });
+
+      Lot.hasMany(models.MovementDetail, {
+        foreignKey: 'movementId',
+        as: 'movementDetails'
+      });
     }
   }
 
