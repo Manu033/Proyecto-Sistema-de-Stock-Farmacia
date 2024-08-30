@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Definir la asociación aquí
-
+        MovementType.hasMany(models.Movement, {
+            foreignKey: 'movementTypeId',
+            as: 'movements'
+        });
     }
   }
 
