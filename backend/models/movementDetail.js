@@ -20,40 +20,26 @@ module.exports = (sequelize, DataTypes) => {
         as: 'lot',
       });
 
-    //   MovementDetail.belongsTo(models.Lot, {
-    //     foreignKey: 'laboratoryId',
-    //     targetKey: 'laboratoryId',
-    //     as: 'laboratory',
-    //   });
 
-    //   MovementDetail.belongsTo(models.Lot, {
-    //     foreignKey: 'productId',
-    //     targetKey: 'productId',
-    //     as: 'product',
-    //   });
     }
   }
 
   MovementDetail.init({
     movementId: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
     },
     lotId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
     },
     laboratoryId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
     },
     productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
     },
     quantity: {
       type: DataTypes.INTEGER,
@@ -62,6 +48,14 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'MovementDetail',
+    indexes: [
+      {
+        unique: true,
+        fields: ['movementId', 'lotId', 'laboratoryId', 'productId'],
+      },
+    ],
+    timestameps: false,
+
   });
 
   return MovementDetail;

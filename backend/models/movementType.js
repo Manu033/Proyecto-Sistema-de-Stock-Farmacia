@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,  
     modelName: 'MovementType',
+    timestameps: false,
+
   });
 
   return MovementType;

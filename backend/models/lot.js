@@ -21,27 +21,24 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Lot.hasMany(models.MovementDetail, {
-        foreignKey: 'movementId',
+        foreignKey: 'lotId',
         as: 'movementDetails'
       });
     }
   }
 
   Lot.init({
-    lotId: {
+    lotCode: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
     },
     productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
     },
     laboratoryId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
      },
     dueDate: {
       type: DataTypes.DATE,
@@ -50,6 +47,13 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Lot',
+    indexes: [
+      {
+        unique: true,
+        fields: ['lotCode', 'productId', 'laboratoryId'],
+      },
+    ],
+    timestameps: false,
   });
 
   return Lot;

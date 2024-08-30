@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,  
     modelName: 'Role',
+    timestameps: false,
+
   });
 
   return Role;
