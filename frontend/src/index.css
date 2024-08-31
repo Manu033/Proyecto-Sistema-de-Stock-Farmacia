@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 p, tr, td, th, span, div, input, label, select {
-  font-family: 'Roboto', sans-serif;
+  font-family: sans-serif;
   font-size: 12px !important;
 }

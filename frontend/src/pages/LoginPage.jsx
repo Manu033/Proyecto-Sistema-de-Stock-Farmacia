@@ -1,9 +1,11 @@
 // src/pages/LoginPage.js
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../features/auth/authSlice';
-import { loginService } from './../api/auth/authServices';
+import React from "react";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../features/auth/authSlice";
+import { loginService } from "./../api/auth/authServices";
+import axiosInstance from "../api/axiosInstance";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -19,27 +21,41 @@ const LoginPage = () => {
       const data = await loginService(email, password);
 
       // Suponiendo que el token está en data.token
-      const token = data.token;
+      const { user, token } = data;
 
       // Almacenar el token en localStorage
-      await localStorage.setItem('token', token);
-
-      // Actualizar el estado de autenticación en Redux
-      console.log(data.user, data.token);
-      
-      await dispatch(login({ user: data.user, token }));
+      await localStorage.setItem("token", token);
+      await localStorage.setItem("user", JSON.stringify(user));
+      await dispatch(login({ user, token }));
 
       // Navegar al dashboard de admin
-      navigate('/admin');
+      navigate("/admin");
     } catch (error) {
-      console.error('Error during login:', error);
+      toast.error(error.message);
+      console.error("Error during login:", error);
       // Manejar el error aquí, mostrar un mensaje al usuario, etc.
     }
   };
 
   React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user) {
+      try {
+        axiosInstance.get("/auth/verify-token").then((response) => {
+          if (response.status === 200) {
+            dispatch(login({ user, token }));
+            navigate("/admin");
+          }
+        });
+      } catch (error) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } finally {
+      }
+    }
     if (isAuthenticated) {
-      navigate('/admin');
+      navigate("/admin");
     }
   }, [isAuthenticated, navigate]);
 
@@ -52,11 +68,15 @@ const LoginPage = () => {
         <div className="text-center mb-6">
           <img src="/logo.png" alt="Logo" className="mx-auto h-12 w-auto" />
         </div>
-        <h2 className="text-center text-2xl font-bold text-gray-700">Iniciar Sesión</h2>
+        <h2 className="text-center text-2xl font-bold text-gray-700">
+          Iniciar Sesión
+        </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm">
             <div>
-              <label htmlFor="username" className="sr-only">Usuario</label>
+              <label htmlFor="username" className="sr-only">
+                Usuario
+              </label>
               <input
                 id="username"
                 name="username"
@@ -67,7 +87,9 @@ const LoginPage = () => {
               />
             </div>
             <div className="mt-4">
-              <label htmlFor="password" className="sr-only">Contraseña</label>
+              <label htmlFor="password" className="sr-only">
+                Contraseña
+              </label>
               <input
                 id="password"
                 name="password"

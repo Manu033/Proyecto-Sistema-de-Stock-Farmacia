@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       User.hasMany(models.Movement, {
         foreignKey: "userId",
-        as: "movements", 
+        as: "movements",
       });
     }
   }
@@ -45,8 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "User",
-    timestameps: false,
-
+      timestameps: false,
     }
   );
 
