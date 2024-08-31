@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios"; // Suponiendo que usas axios para las solicitudes HTTP
+import axiosInstance from "../api/axiosInstance";
+import LoaderComponent from "./LoaderComponent";
 
 const ProtectedRoute = ({ children }) => {
-  const token = useSelector((state) => state.auth.token);
+  const token =
+    useSelector((state) => state.auth.token) || localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
@@ -18,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
 
       try {
         // Realiza una solicitud al backend para verificar la validez del token
-        const response = await axios.get('/api/auth/verify-token', {
+        const response = await axiosInstance.get("/auth/verify-token", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -30,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Token verification failed:', error);
+        console.error("Token verification failed:", error);
         setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
@@ -42,7 +44,12 @@ const ProtectedRoute = ({ children }) => {
 
   if (isLoading) {
     // Mostrar un indicador de carga mientras se verifica el token
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center w-screen h-screen">
+        <LoaderComponent />
+        <div></div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

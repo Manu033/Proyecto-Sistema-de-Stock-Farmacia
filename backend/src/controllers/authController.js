@@ -77,15 +77,30 @@ const loginUser = async (req, res) => {
 };
 
 const verifyToken = async (req, res) => {
-  jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
+  const authHeader = req.headers.authorization;
+
+  // Verifica si existe el encabezado de autorización y si comienza con 'Bearer '
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  // Verifica el token usando jsonwebtoken
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      res.sendStatus(403);
-    } else {
-      res.status(200).json({
-        message: "Token válido",
-        authData,
-      });
+      // Si el token no es válido o ha expirado
+      return res.status(401).json({ message: 'Token is not valid' });
     }
+
+    // Si el token es válido, puedes obtener los datos decodificados
+    // Por ejemplo, el ID de usuario que se guardó en el token
+    req.userId = decoded.id; 
+    console.log(req.userId);
+    setTimeout(()=>{
+      res.status(200).json({ message: 'Token is valid' });
+    }, 2000)
+    // Respuesta exitosa si el token es válido
   });
 };
 

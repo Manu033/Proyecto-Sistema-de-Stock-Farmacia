@@ -11,7 +11,11 @@ import LogisticsDispatchPage from "../pages/LogisticsDispatchPage";
 const router = createBrowserRouter([
   {
     path: "/admin",
-    element: <AdminPage />,
+    element: (
+      <ProtectedRoute>
+        <AdminPage />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "",
@@ -26,9 +30,9 @@ const router = createBrowserRouter([
         element: <MovementsPage />,
       },
       {
-        path: "logistics", 
+        path: "logistics",
         element: <LogisticsDispatchPage />,
-      }
+      },
     ],
   },
   {

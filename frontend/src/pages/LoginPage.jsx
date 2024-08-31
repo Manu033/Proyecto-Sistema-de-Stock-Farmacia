@@ -22,10 +22,12 @@ const LoginPage = () => {
       const token = data.token;
 
       // Almacenar el token en localStorage
-      localStorage.setItem('token', token);
+      await localStorage.setItem('token', token);
 
       // Actualizar el estado de autenticación en Redux
-      dispatch(login({ user: data.user, token }));
+      console.log(data.user, data.token);
+      
+      await dispatch(login({ user: data.user, token }));
 
       // Navegar al dashboard de admin
       navigate('/admin');
