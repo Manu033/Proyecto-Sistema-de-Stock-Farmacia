@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Lot.init({
     lotCode: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     productId: {
