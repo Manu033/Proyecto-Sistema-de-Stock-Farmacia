@@ -9,6 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Role, {
+        foreignKey: "roleId",
+        as: "role",
+      });
+      User.hasMany(models.Movement, {
+        foreignKey: "userId",
+        as: "movements", 
+      });
     }
   }
   User.init(
@@ -29,14 +37,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.STRING,
-        defaultValue: "user", // O cualquier rol predeterminado
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
       sequelize,
       modelName: "User",
+    timestameps: false,
+
     }
   );
 
