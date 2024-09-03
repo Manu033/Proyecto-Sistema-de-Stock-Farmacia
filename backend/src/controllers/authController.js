@@ -97,9 +97,7 @@ const verifyToken = async (req, res) => {
     // Por ejemplo, el ID de usuario que se guardó en el token
     req.userId = decoded.id;
     console.log(req.userId);
-    setTimeout(() => {
-      res.status(200).json({ message: "Token is valid" });
-    }, 4000);
+    res.status(200).json({ message: "Token is valid" });
     // Respuesta exitosa si el token es válido
   });
 };

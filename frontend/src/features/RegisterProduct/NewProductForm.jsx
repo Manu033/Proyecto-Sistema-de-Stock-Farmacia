@@ -1,142 +1,134 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
+import SelectField from "../../components/common/SelectField/SelectField";
+import { productTypes } from "../../utils/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createProduct } from "../../api/products/productsServices";
+import { toast } from "react-toastify";
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const onSubmit = async (values) => {
-  await sleep(300);
-  window.alert(JSON.stringify(values, null, 2));
-};
+const required = (value) => (value ? undefined : "Campo requerido");
 
 function MedicamentoForm() {
+  const { queryClient } = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (data) => createProduct(data), // Ejecuta createProduct con los datos proporcionados
+    onSuccess: () => {
+      toast.success("Producto creado correctamente");
+      queryClient.invalidateQueries(["products"]);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Error al crear el producto");
+    },
+  });
+
+  const onSubmit = async (values) => {
+    const data = JSON.stringify(values);
+    mutate(data);
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-3xl font-bold mb-6">Formulario de Medicamento</h2>
       <Form
         onSubmit={onSubmit}
-        initialValues={{
-          producto: "Paracetamol",
-          fechaCaducidad: "2025-12-01",
-          cantidadDisponible: 100,
-          hueco: "A1",
-          lote: "Lote 123",
-          unidad: "Caja",
-          deposito: "Depósito Central",
-          fechaCreacion: "2024-01-01",
-          categoriaProducto: "Analgesico",
+        initialValues={{}}
+        render={({ handleSubmit, form, submitting, pristine, values }) => {
+          // Obtener estado del formulario
+          const { errors } = form.getState();
+          const hasErrors = Object.keys(errors).length > 0; // Verificar si hay errores
+
+          return (
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-gray-700">Producto</label>
+                  <Field
+                    name="name"
+                    component="input"
+                    type="text"
+                    placeholder="Nombre del Producto"
+                    validate={required} // Añade la función de validación aquí
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <Field
+                    name="name"
+                    render={({ meta }) =>
+                      meta.touched &&
+                      meta.error && (
+                        <span className="text-red-500 text-sm">
+                          {meta.error}
+                        </span>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700">Descripción</label>
+                  <Field
+                    name="description"
+                    component="input"
+                    type="text"
+                    placeholder="Descripción"
+                    validate={required} // Añade la función de validación aquí
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <Field
+                    name="description"
+                    render={({ meta }) =>
+                      meta.touched &&
+                      meta.error && (
+                        <span className="text-red-500 text-sm">
+                          {meta.error}
+                        </span>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700">
+                    Tipo de producto
+                  </label>
+                  <Field
+                    name="productTypeId"
+                    validate={required} // Añade la función de validación aquí
+                  >
+                    {({ input, meta }) => (
+                      <>
+                        <SelectField
+                          options={productTypes}
+                          placeholder={"Tipo de producto"}
+                          onSelect={(option) => input.onChange(option.value)} // Conecta la selección con el valor del campo
+                        />
+                        {meta.touched && meta.error && (
+                          <span className="text-red-500 text-sm">
+                            {meta.error}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </Field>
+                </div>
+              </div>
+              <div className="flex justify-end mt-6">
+                <button
+                  type="submit"
+                  disabled={submitting || pristine || hasErrors}
+                  className={`px-6 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    submitting || pristine || hasErrors
+                      ? "bg-gray-400 text-white cursor-not-allowed" // Estilo cuando está deshabilitado
+                      : "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500" // Estilo cuando está habilitado
+                  }`}
+                >
+                  Submit
+                </button>
+              </div>
+              <pre className="mt-6 bg-gray-100 p-4 rounded-md">
+                {JSON.stringify(values, null, 2)}
+              </pre>
+            </form>
+          );
         }}
-        render={({ handleSubmit, form, submitting, pristine, values }) => (
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-gray-700">Producto</label>
-                <Field
-                  name="producto"
-                  component="input"
-                  type="text"
-                  placeholder="Nombre del Producto"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Fecha de Caducidad</label>
-                <Field
-                  name="fechaCaducidad"
-                  component="input"
-                  type="date"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Cantidad Disponible</label>
-                <Field
-                  name="cantidadDisponible"
-                  component="input"
-                  type="number"
-                  placeholder="Cantidad Disponible"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Hueco</label>
-                <Field
-                  name="hueco"
-                  component="input"
-                  type="text"
-                  placeholder="Hueco de Almacenamiento"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Lote</label>
-                <Field
-                  name="lote"
-                  component="input"
-                  type="text"
-                  placeholder="Número de Lote"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Unidad</label>
-                <Field
-                  name="unidad"
-                  component="input"
-                  type="text"
-                  placeholder="Unidad"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Depósito</label>
-                <Field
-                  name="deposito"
-                  component="input"
-                  type="text"
-                  placeholder="Depósito"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Fecha de Creación</label>
-                <Field
-                  name="fechaCreacion"
-                  component="input"
-                  type="date"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Categoría del Producto</label>
-                <Field
-                  name="categoriaProducto"
-                  component="input"
-                  type="text"
-                  placeholder="Categoría del Producto"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end mt-6">
-              <button
-                type="submit"
-                disabled={submitting || pristine}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={form.reset}
-                disabled={submitting || pristine}
-                className="ml-4 bg-gray-600 text-white px-6 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-              >
-                Reset
-              </button>
-            </div>
-            <pre className="mt-6 bg-gray-100 p-4 rounded-md">{JSON.stringify(values, null, 2)}</pre>
-          </form>
-        )}
       />
     </div>
   );

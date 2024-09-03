@@ -10,7 +10,6 @@ import axiosInstance from "../api/axiosInstance";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +31,6 @@ const LoginPage = () => {
       navigate("/admin");
     } catch (error) {
       toast.error(error.message);
-      console.error("Error during login:", error);
-      // Manejar el error aquí, mostrar un mensaje al usuario, etc.
     }
   };
 
@@ -54,10 +51,7 @@ const LoginPage = () => {
       } finally {
       }
     }
-    if (isAuthenticated) {
-      navigate("/admin");
-    }
-  }, [isAuthenticated, navigate]);
+  }, [ dispatch, navigate ]);
 
   return (
     <div

@@ -10,6 +10,11 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  if (config.method === 'post' || config.method === 'put') {
+    config.headers['Content-Type'] = 'application/json';
+  }
+
   return config;
 }, (error) => {
   return Promise.reject(error);

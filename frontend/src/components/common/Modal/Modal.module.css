@@ -9,6 +9,7 @@
 }
 
 .modal {
+  margin: auto;
   position: fixed;
   top: 5vh;
   bottom: 5vh;

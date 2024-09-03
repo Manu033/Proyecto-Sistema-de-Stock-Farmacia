@@ -11,6 +11,7 @@ import {
 import MovementDetails from "./MovementDetails.jsx";
 import { movements, movementDetails } from "./data.js";
 import classNames from 'classnames';
+import { formatDateTime } from "../../utils/helpers.js";
 
 function MovementsTable() {
   const [filters, setFilters] = useState({
@@ -137,7 +138,7 @@ function MovementsTable() {
               <TData>{movement.descripcion}</TData>
               <TData>{movement.desde}</TData>
               <TData>{movement.hacia}</TData>
-              <TData>{movement.fecha}</TData>
+              <TData>{formatDateTime(movement.fecha)}</TData>
             </TRow>
           ))}
         </TBody>

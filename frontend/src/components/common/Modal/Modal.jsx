@@ -9,16 +9,16 @@ const Backdrop = (props) => {
 
 const portalElement = document.getElementById("overlays");
 
-const Modal = (props) => {
+const Modal = ({onClose, children, className}) => {
   return (
     <>
       {ReactDOM.createPortal(
-        <Backdrop onClose={props.onClose} />,
+        <Backdrop onClose={onClose} />,
         portalElement
       )}
       {ReactDOM.createPortal(
-        <div className={classNames(classes.modal, "overflow-scroll")}>
-          <div className={classes.content}>{props.children}</div>
+        <div className={classNames(classes.modal, "overflow-scroll", className)}>
+          <div className={classes.content}>{children}</div>
         </div>,
         portalElement
       )}
