@@ -1,4 +1,5 @@
 const { Product, Lot, ProductType } = require("./../../models");
+const { Op } = require("sequelize");
 
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
@@ -17,25 +18,64 @@ const createProduct = async (req, res) => {
 
 // Obtener todos los productos
 const getAllProducts = async (req, res) => {
+  const { page = 1, limit = 20 } = req.query; // Valores predeterminados de página y límite
+
   try {
     const products = await Product.findAll({
+      offset: (page - 1) * limit, // Salto para la paginación
+      limit: parseInt(limit), // Límite de registros por página
       include: [
         {
           model: Lot,
           as: "lots",
         },
-        {
-          model: ProductType,
-          as: "productType",
-        },
+        { model: ProductType, as: "productType" },
       ],
     });
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({
-      error: "Error al obtener los productos",
-      details: error.message,
+
+    const totalProducts = await Product.count(); // Contar el total de productos
+
+    res.json({
+      data: { products },
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: parseInt(page),
     });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error al obtener productos", details: error.message });
+  }
+};
+
+const searchProducts = async (req, res) => {
+  const { query, page = 1, limit = 20 } = req.query;
+  console.log(query);
+
+  try {
+    const { count, rows: products } = await Product.findAndCountAll({
+      where: {
+        name: {
+          [Op.like]: `%${query}%`, // Búsqueda insensible a mayúsculas y minúsculas
+        },
+      },
+      offset: (page - 1) * limit,
+      limit: parseInt(limit),
+      include: [
+        {
+          model: Lot,
+          as: "lots",
+        },
+        { model: ProductType, as: "productType" },
+      ],
+    });
+
+    res.json({
+      data: { products },
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 };
 
@@ -48,7 +88,6 @@ const getProductById = async (req, res) => {
         {
           model: Lot,
           as: "lots",
-          attributes: ["id", "name"],
         },
       ],
     });
@@ -116,4 +155,5 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
+  searchProducts,
 };

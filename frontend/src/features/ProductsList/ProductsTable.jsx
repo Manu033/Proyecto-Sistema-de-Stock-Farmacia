@@ -36,7 +36,7 @@ function ProductsTable({ products, onRowClick }) {
             <TData>Nombre</TData>
             <TData>Descripción</TData>
             <TData>Tipo de Producto</TData>
-            <TData className="w-24"></TData>
+            <TData className="w-24">Control</TData>
           </THeadRow>
         </THead>
         <TBody>
@@ -50,13 +50,22 @@ function ProductsTable({ products, onRowClick }) {
               <TData>{product.description}</TData>
               <TData>{product.productType.name}</TData>
               <TData>
-                <button className="mx-1" onClick={() => handleEdit(product.id)}><MdEdit color="orange" size={"1.2rem"}/></button>
-                <button className="mx-1"onClick={() => handleDelete(product.id)}><MdDelete color="red" size={"1.2rem"}/></button>
+                <button className="mx-1" onClick={() => handleEdit(product.id)}>
+                  <MdEdit color="orange" size={"1.2rem"} />
+                </button>
+                <button
+                  className="mx-1"
+                  onClick={() => handleDelete(product.id)}
+                >
+                  <MdDelete color="red" size={"1.2rem"} />
+                </button>
               </TData>
             </TRow>
           ))}
         </TBody>
       </Table>
+      {products.length === 0 && <p className="text-gray-500 text-center my-2">No hay productos disponibles.</p>}
+
       <EditProductModal
         isModalOpen={isModalEditOpen}
         closeModal={() => setModalEditOpen(false)}

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const required = (value) => (value ? undefined : "Campo requerido");
 
 function MedicamentoForm() {
-  const { queryClient } = useQueryClient();
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: (data) => createProduct(data), // Ejecuta createProduct con los datos proporcionados
     onSuccess: () => {

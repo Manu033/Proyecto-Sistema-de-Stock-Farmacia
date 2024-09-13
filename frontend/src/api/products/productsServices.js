@@ -39,3 +39,13 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 }
+
+export const searchProductByName = async (productName) => {
+  try {
+    const result = await axiosInstance.get(`/products/search?query=${productName}`);
+    return result.data;
+  } catch (error) {
+    console.error("Error searching product", error);
+    throw error;
+  }
+}
