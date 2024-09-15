@@ -33,12 +33,17 @@ const getAllProducts = async (req, res) => {
       ],
     });
 
-    const totalProducts = await Product.count(); // Contar el total de productos
-
+    const totalProducts = await Product.count();
+    const totalPages = Math.ceil(totalProducts / limit);
+  
     res.json({
       data: { products },
-      totalPages: Math.ceil(totalProducts / limit),
-      currentPage: parseInt(page),
+      pagination: {
+        totalRecords: totalProducts,
+        totalPages,
+        currentPage: page,
+        recordsPerPage: limit,
+      },
     });
   } catch (error) {
     res

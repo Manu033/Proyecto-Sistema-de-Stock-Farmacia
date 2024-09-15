@@ -70,7 +70,7 @@ TRow.propTypes = {
 };
 
 function TData({ children, className }) {
-  return <td className={classNames("px-4 py-2", className)}>{children}</td>;
+  return <td className={classNames("px-4 py-1", className)}>{children}</td>;
 }
 
 TData.propTypes = {

@@ -23,7 +23,7 @@ const SearchInput = ({ onSearch }) => {
   };
 
   return (
-    <div className="flex flex-row mb-6 items-center space-x-4">
+    <div className="flex flex-row items-center space-x-4 items-end">
       <div className="flex flex-col">
         <label htmlFor="search" className="px-1">
           Buscar por nombre
